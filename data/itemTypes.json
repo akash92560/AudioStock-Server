@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Microphone",
+    "description": "Audio input devices"
+  },
+  {
+    "id": 2,
+    "name": "Speaker",
+    "description": "Audio output devices"
+  },
+  {
+    "id": 3,
+    "name": "Headphones",
+    "description": "Personal audio devices"
+  },
+  {
+    "id": 4,
+    "name": "Mixer",
+    "description": "Audio mixing equipment"
+  }
+]

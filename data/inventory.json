@@ -1,0 +1,56 @@
+[
+  {
+    "id": "MIC010",
+    "name": "Shure SM58",
+    "type": "Microphone",
+    "store": "Main Store",
+    "quantity": 5,
+    "condition": "Excellent",
+    "purchaseDate": "2023-01-15"
+  },
+  {
+    "id": "MIC002",
+    "name": "Rode NT1A",
+    "type": "Microphone",
+    "store": "Warehouse",
+    "quantity": 3,
+    "condition": "New",
+    "purchaseDate": "2023-02-20"
+  },
+  {
+    "id": "SPK001",
+    "name": "JBL EON615",
+    "type": "Speaker",
+    "store": "Main Store",
+    "quantity": 2,
+    "condition": "Good",
+    "purchaseDate": "2022-11-10"
+  },
+  {
+    "id": "SPK002",
+    "name": "QSC K12.2",
+    "type": "Speaker",
+    "store": "Warehouse",
+    "quantity": 4,
+    "condition": "Excellent",
+    "purchaseDate": "2023-03-05"
+  },
+  {
+    "id": "HPH001",
+    "name": "Audio-Technica ATH-M50x",
+    "type": "Headphones",
+    "store": "Display Room",
+    "quantity": 8,
+    "condition": "New",
+    "purchaseDate": "2023-04-12"
+  },
+  {
+    "id": "MXR001",
+    "name": "Behringer X32",
+    "type": "Mixer",
+    "store": "Main Store",
+    "quantity": 1,
+    "condition": "Good",
+    "purchaseDate": "2022-09-30"
+  }
+]

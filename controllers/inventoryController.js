@@ -72,16 +72,38 @@ exports.updateInventoryItem = async (req, res) => {
       return res.status(404).json({ message: 'Item not found' });
     }
     
-    await item.update({
+    // Process numeric values
+    let updateData = {
       name: req.body.name || item.name,
       type: req.body.type || item.type,
       store: req.body.store || item.store,
-      quantity: req.body.quantity || item.quantity,
       condition: req.body.condition || item.condition,
-      purchaseDate: req.body.purchaseDate || item.purchaseDate,
-      notes: req.body.notes || item.notes
-    });
+      serialNumber: req.body.serialNumber,
+      itemSource: req.body.itemSource || item.itemSource || 'Purchased',
+      itemState: req.body.itemState || item.itemState || 'Working',
+      notes: req.body.notes
+    };
     
+    // Handle dates - convert empty strings to null
+    updateData.purchaseDate = req.body.purchaseDate === '' ? null : req.body.purchaseDate;
+    updateData.expiryDate = req.body.expiryDate === '' ? null : req.body.expiryDate;
+    
+    // Handle quantity - ensure it's a number
+    if (req.body.quantity !== undefined) {
+      updateData.quantity = parseInt(req.body.quantity);
+    }
+    
+    // Handle price - ensure it's a number or null
+    if (req.body.price !== undefined) {
+      updateData.price = req.body.price === '' || req.body.price === null ? 
+        null : parseFloat(req.body.price);
+    }
+    
+    console.log('Updating item with data:', updateData);
+    
+    await item.update(updateData);
+    
+    console.log('Updated item data:', item.toJSON());
     res.json(item);
   } catch (error) {
     console.error('Error updating inventory item:', error);

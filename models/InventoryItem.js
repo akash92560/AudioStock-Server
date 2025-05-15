@@ -18,6 +18,10 @@ const InventoryItem = sequelize.define('InventoryItem', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  location: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   quantity: {
     type: DataTypes.INTEGER,
     allowNull: false,

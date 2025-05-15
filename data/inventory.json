@@ -3,10 +3,13 @@
     "id": "MIC010",
     "name": "Shure SM58",
     "type": "Microphone",
-    "store": "Main Store",
+    "store": "Control Room (KB)",
     "quantity": 5,
-    "condition": "Excellent",
-    "purchaseDate": "2023-01-15"
+    "purchaseDate": "2023-01-15",
+    "price": "8000",
+    "itemSource": "Purchased",
+    "itemState": "Working",
+    "notes": "Standard vocal microphone"
   },
   {
     "id": "MIC002",
@@ -14,8 +17,11 @@
     "type": "Microphone",
     "store": "Warehouse",
     "quantity": 3,
-    "condition": "New",
-    "purchaseDate": "2023-02-20"
+    "purchaseDate": "2023-02-20",
+    "price": "15000",
+    "itemSource": "Purchased",
+    "itemState": "Working",
+    "notes": "Studio condenser microphone"
   },
   {
     "id": "SPK001",
@@ -23,8 +29,11 @@
     "type": "Speaker",
     "store": "Main Store",
     "quantity": 2,
-    "condition": "Good",
-    "purchaseDate": "2022-11-10"
+    "purchaseDate": "2022-11-10",
+    "price": "45000",
+    "itemSource": "Purchased",
+    "itemState": "Working",
+    "notes": "Powered PA speaker"
   },
   {
     "id": "SPK002",
@@ -32,8 +41,11 @@
     "type": "Speaker",
     "store": "Warehouse",
     "quantity": 4,
-    "condition": "Excellent",
-    "purchaseDate": "2023-03-05"
+    "purchaseDate": "2023-03-05",
+    "price": "60000",
+    "itemSource": "Purchased",
+    "itemState": "Working",
+    "notes": "Powered PA speaker"
   },
   {
     "id": "HPH001",
@@ -41,8 +53,11 @@
     "type": "Headphones",
     "store": "Display Room",
     "quantity": 8,
-    "condition": "New",
-    "purchaseDate": "2023-04-12"
+    "purchaseDate": "2023-04-12",
+    "price": "12000",
+    "itemSource": "Purchased",
+    "itemState": "Working",
+    "notes": "Studio monitoring headphones"
   },
   {
     "id": "MXR001",
@@ -50,7 +65,22 @@
     "type": "Mixer",
     "store": "Main Store",
     "quantity": 1,
-    "condition": "Good",
-    "purchaseDate": "2022-09-30"
+    "purchaseDate": "2022-09-30",
+    "price": "120000",
+    "itemSource": "Purchased",
+    "itemState": "Working",
+    "notes": "Digital mixing console"
+  },
+  {
+    "id": "12",
+    "name": "AkashTest CR KB",
+    "type": "Speaker",
+    "store": "Warehouse",
+    "quantity": 1,
+    "purchaseDate": "2025-05-13",
+    "price": "25000",
+    "itemSource": "Donation",
+    "itemState": "Needs Repair",
+    "notes": "Test item"
   }
 ]

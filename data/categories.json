@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "Audio Input",
+    "description": "Devices that capture audio signals"
+  },
+  {
+    "id": 2,
+    "name": "Audio Output",
+    "description": "Devices that produce audio output"
+  },
+  {
+    "id": 3,
+    "name": "Personal Audio",
+    "description": "Personal listening devices"
+  },
+  {
+    "id": 4,
+    "name": "Audio Processing",
+    "description": "Equipment for processing audio signals"
+  },
+  {
+    "id": 5,
+    "name": "Recording Equipment",
+    "description": "Equipment used for recording audio"
+  },
+  {
+    "id": 6,
+    "name": "Cables & Connectors",
+    "description": "Audio cables and connection accessories"
+  },
+  {
+    "id": 1747132764103,
+    "name": "Test category",
+    "description": "test"
+  }
+]

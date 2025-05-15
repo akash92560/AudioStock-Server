@@ -1,12 +1,27 @@
 [
   {
-    "id": 2,
-    "name": "Warehouse",
-    "location": "Building B"
+    "id": 1747131524540,
+    "name": "Dispencery",
+    "location": "Burari"
   },
   {
-    "id": 3,
-    "name": "Display Room",
-    "location": "Building C"
+    "id": 1747131533831,
+    "name": "Store room",
+    "location": "KB"
+  },
+  {
+    "id": 1747131546572,
+    "name": "Control Room",
+    "location": "KB"
+  },
+  {
+    "id": 1747131557748,
+    "name": "Control Room",
+    "location": "Burari"
+  },
+  {
+    "id": 1747131578236,
+    "name": "Stall Room",
+    "location": "Burari"
   }
 ]

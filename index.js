@@ -6,7 +6,7 @@ const path = require('path');
 
 // Initialize express app
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5123;
 
 // Middleware
 app.use(cors({
@@ -23,6 +23,7 @@ const ITEM_TYPES_FILE = path.join(DATA_DIR, 'itemTypes.json');
 const INVENTORY_FILE = path.join(DATA_DIR, 'inventory.json');
 const TRANSFERS_FILE = path.join(DATA_DIR, 'transfers.json');
 const ISSUES_FILE = path.join(DATA_DIR, 'issues.json');
+const CATEGORIES_FILE = path.join(DATA_DIR, 'categories.json');
 
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -46,10 +47,10 @@ initDataFile(STORES_FILE, [
 ]);
 
 initDataFile(ITEM_TYPES_FILE, [
-  { id: 1, name: 'Microphone', description: 'Audio input devices' },
-  { id: 2, name: 'Speaker', description: 'Audio output devices' },
-  { id: 3, name: 'Headphones', description: 'Personal audio devices' },
-  { id: 4, name: 'Mixer', description: 'Audio mixing equipment' }
+  { id: 1, name: 'Microphone', category: 'Audio Input', description: 'Audio input devices' },
+  { id: 2, name: 'Speaker', category: 'Audio Output', description: 'Audio output devices' },
+  { id: 3, name: 'Headphones', category: 'Personal Audio', description: 'Personal audio devices' },
+  { id: 4, name: 'Mixer', category: 'Audio Processing', description: 'Audio mixing equipment' }
 ]);
 
 initDataFile(INVENTORY_FILE, [
@@ -63,6 +64,14 @@ initDataFile(INVENTORY_FILE, [
 
 initDataFile(TRANSFERS_FILE, []);
 initDataFile(ISSUES_FILE, []);
+initDataFile(CATEGORIES_FILE, [
+  { id: 1, name: "Audio Input", description: "Devices that capture audio signals" },
+  { id: 2, name: "Audio Output", description: "Devices that produce audio output" },
+  { id: 3, name: "Personal Audio", description: "Personal listening devices" },
+  { id: 4, name: "Audio Processing", description: "Equipment for processing audio signals" },
+  { id: 5, name: "Recording Equipment", description: "Equipment used for recording audio" },
+  { id: 6, name: "Cables & Connectors", description: "Audio cables and connection accessories" }
+]);
 
 // Helper functions to read and write data
 const readData = (filePath) => {
@@ -137,21 +146,35 @@ app.delete('/api/stores/:id', (req, res) => {
 
 // Item Types API
 app.get('/api/item-types', (req, res) => {
-  const itemTypes = readData(ITEM_TYPES_FILE);
-  res.json(itemTypes);
+  console.log('GET /api/item-types request received');
+  try {
+    const itemTypes = readData(ITEM_TYPES_FILE);
+    console.log('Sending item types data:', itemTypes);
+    res.json(itemTypes);
+  } catch (error) {
+    console.error('Error reading item types data:', error);
+    res.status(500).json({ message: 'Failed to read item types data' });
+  }
 });
 
 app.post('/api/item-types', (req, res) => {
-  const itemTypes = readData(ITEM_TYPES_FILE);
-  const newItemType = {
-    id: Date.now(),
-    name: req.body.name,
-    description: req.body.description
-  };
-  
-  itemTypes.push(newItemType);
-  writeData(ITEM_TYPES_FILE, itemTypes);
-  res.status(201).json(newItemType);
+  console.log('POST /api/item-types request received:', req.body);
+  try {
+    const itemTypes = readData(ITEM_TYPES_FILE);
+    const newItemType = {
+      id: Date.now(),
+      name: req.body.name,
+      category: req.body.category || '',
+      description: req.body.description || ''
+    };
+    
+    itemTypes.push(newItemType);
+    writeData(ITEM_TYPES_FILE, itemTypes);
+    res.status(201).json(newItemType);
+  } catch (error) {
+    console.error('Error adding item type:', error);
+    res.status(500).json({ message: 'Failed to add item type' });
+  }
 });
 
 app.put('/api/item-types/:id', (req, res) => {
@@ -181,25 +204,105 @@ app.delete('/api/item-types/:id', (req, res) => {
   res.json({ message: 'Item type deleted successfully' });
 });
 
+// Categories API
+app.get('/api/categories', (req, res) => {
+  console.log('GET /api/categories request received');
+  try {
+    const categories = readData(CATEGORIES_FILE);
+    console.log('Sending categories data:', categories);
+    res.json(categories);
+  } catch (error) {
+    console.error('Error reading categories data:', error);
+    res.status(500).json({ message: 'Failed to read categories data' });
+  }
+});
+
+app.post('/api/categories', (req, res) => {
+  console.log('POST /api/categories request received:', req.body);
+  try {
+    const categories = readData(CATEGORIES_FILE);
+    const newCategory = {
+      id: Date.now(),
+      name: req.body.name,
+      description: req.body.description || ''
+    };
+    
+    categories.push(newCategory);
+    writeData(CATEGORIES_FILE, categories);
+    res.status(201).json(newCategory);
+  } catch (error) {
+    console.error('Error adding category:', error);
+    res.status(500).json({ message: 'Failed to add category' });
+  }
+});
+
+app.put('/api/categories/:id', (req, res) => {
+  const categories = readData(CATEGORIES_FILE);
+  const id = parseInt(req.params.id);
+  const categoryIndex = categories.findIndex(category => category.id === id);
+  
+  if (categoryIndex === -1) {
+    return res.status(404).json({ message: 'Category not found' });
+  }
+  
+  categories[categoryIndex] = { ...categories[categoryIndex], ...req.body };
+  writeData(CATEGORIES_FILE, categories);
+  res.json(categories[categoryIndex]);
+});
+
+app.delete('/api/categories/:id', (req, res) => {
+  const categories = readData(CATEGORIES_FILE);
+  const id = parseInt(req.params.id);
+  const filteredCategories = categories.filter(category => category.id !== id);
+  
+  if (filteredCategories.length === categories.length) {
+    return res.status(404).json({ message: 'Category not found' });
+  }
+  
+  writeData(CATEGORIES_FILE, filteredCategories);
+  res.json({ message: 'Category deleted successfully' });
+});
+
 // Inventory API
 app.get('/api/inventory', (req, res) => {
-  let inventory = readData(INVENTORY_FILE);
-  
-  // Filter by search term if provided
-  if (req.query.search) {
-    const searchTerm = req.query.search.toLowerCase();
-    inventory = inventory.filter(item => 
-      item.id.toLowerCase().includes(searchTerm) || 
-      item.name.toLowerCase().includes(searchTerm)
-    );
+  console.log('GET /api/inventory request received with query:', req.query);
+  try {
+    let inventory = readData(INVENTORY_FILE);
+    
+    // Debug: Log the first item to check its structure
+    if (inventory.length > 0) {
+      console.log('Sample inventory item:', JSON.stringify(inventory[0]));
+    }
+    
+    // Filter by search term if provided
+    if (req.query.search) {
+      const searchTerm = req.query.search.toLowerCase();
+      inventory = inventory.filter(item => 
+        item.id.toLowerCase().includes(searchTerm) || 
+        item.name.toLowerCase().includes(searchTerm)
+      );
+    }
+    
+    // Filter by type if provided
+    if (req.query.type && req.query.type !== 'all') {
+      inventory = inventory.filter(item => item.type === req.query.type);
+    }
+    
+    // Filter by store ID if provided
+    if (req.query.storeId) {
+      const stores = readData(STORES_FILE);
+      const store = stores.find(s => s.id === parseInt(req.query.storeId));
+      if (store) {
+        inventory = inventory.filter(item => item.store === store.name);
+      }
+    }
+    
+    console.log(`Returning ${inventory.length} inventory items`);
+    res.json(inventory);
+  } catch (error) {
+    console.error('Error reading inventory data:', error);
+    res.status(500).json({ message: 'Failed to read inventory data' });
   }
-  
-  // Filter by type if provided
-  if (req.query.type && req.query.type !== 'all') {
-    inventory = inventory.filter(item => item.type === req.query.type);
-  }
-  
-  res.json(inventory);
 });
 
 app.post('/api/inventory', (req, res) => {
@@ -210,9 +313,11 @@ app.post('/api/inventory', (req, res) => {
     type: req.body.itemType,
     store: req.body.store,
     quantity: req.body.quantity || 1,
-    condition: req.body.condition,
     purchaseDate: req.body.purchaseDate,
-    notes: req.body.notes
+    notes: req.body.notes,
+    price: req.body.price || '',
+    itemSource: req.body.itemSource || 'Purchased',
+    itemState: req.body.itemState || 'Working'
   };
   
   inventory.push(newItem);
@@ -221,15 +326,22 @@ app.post('/api/inventory', (req, res) => {
 });
 
 app.put('/api/inventory/:id', (req, res) => {
+  console.log('PUT /api/inventory/:id request received:', req.params.id);
+  console.log('Request body:', req.body);
+  
   const inventory = readData(INVENTORY_FILE);
   const id = req.params.id;
   const itemIndex = inventory.findIndex(item => item.id === id);
   
   if (itemIndex === -1) {
+    console.log('Item not found with ID:', id);
     return res.status(404).json({ message: 'Item not found' });
   }
   
+  console.log('Original item:', inventory[itemIndex]);
   inventory[itemIndex] = { ...inventory[itemIndex], ...req.body };
+  console.log('Updated item:', inventory[itemIndex]);
+  
   writeData(INVENTORY_FILE, inventory);
   res.json(inventory[itemIndex]);
 });

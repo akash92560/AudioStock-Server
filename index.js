@@ -338,12 +338,36 @@ app.put('/api/inventory/:id', (req, res) => {
     return res.status(404).json({ message: 'Item not found' });
   }
   
+  // Process the request body to ensure proper data types
+  const updatedItem = {
+    ...req.body,
+    // Ensure price is stored as a number if present
+    price: req.body.price !== null && req.body.price !== undefined ? 
+      parseFloat(req.body.price) : null,
+    // Ensure quantity is stored as a number
+    quantity: req.body.quantity !== null && req.body.quantity !== undefined ? 
+      parseInt(req.body.quantity) : 0
+  };
+  
   console.log('Original item:', inventory[itemIndex]);
-  inventory[itemIndex] = { ...inventory[itemIndex], ...req.body };
+  console.log('Processed update data:', updatedItem);
+  
+  // Merge the original item with the updated data
+  inventory[itemIndex] = { 
+    ...inventory[itemIndex], 
+    ...updatedItem 
+  };
+  
   console.log('Updated item:', inventory[itemIndex]);
   
-  writeData(INVENTORY_FILE, inventory);
-  res.json(inventory[itemIndex]);
+  // Write the updated inventory to the file
+  const writeSuccess = writeData(INVENTORY_FILE, inventory);
+  
+  if (writeSuccess) {
+    res.json(inventory[itemIndex]);
+  } else {
+    res.status(500).json({ message: 'Failed to update item data' });
+  }
 });
 
 app.delete('/api/inventory/:id', (req, res) => {
@@ -357,6 +381,28 @@ app.delete('/api/inventory/:id', (req, res) => {
   
   writeData(INVENTORY_FILE, filteredInventory);
   res.json({ message: 'Item deleted successfully' });
+});
+
+// Add an endpoint to get a single inventory item by ID
+app.get('/api/inventory/:id', (req, res) => {
+  console.log(`GET /api/inventory/${req.params.id} request received`);
+  
+  try {
+    const inventory = readData(INVENTORY_FILE);
+    const id = req.params.id;
+    const item = inventory.find(item => item.id === id);
+    
+    if (!item) {
+      console.log('Item not found with ID:', id);
+      return res.status(404).json({ message: 'Item not found' });
+    }
+    
+    console.log('Found item:', item);
+    res.json(item);
+  } catch (error) {
+    console.error('Error reading inventory data:', error);
+    res.status(500).json({ message: 'Failed to read inventory data' });
+  }
 });
 
 // Transfers API
@@ -474,6 +520,23 @@ app.put('/api/issues/:id/return', (req, res) => {
 app.get('/api/test', (req, res) => {
   console.log('Test endpoint called');
   res.json({ message: 'API is working' });
+});
+
+// Add a debug endpoint to view the raw inventory data file (ADMIN USE ONLY)
+// NOTE: In production, this should be protected by authentication
+app.get('/api/debug/inventory-data', (req, res) => {
+  console.log('DEBUG: Raw inventory data requested');
+  
+  try {
+    const inventory = readData(INVENTORY_FILE);
+    res.json({
+      count: inventory.length,
+      data: inventory
+    });
+  } catch (error) {
+    console.error('Error reading inventory data:', error);
+    res.status(500).json({ message: 'Failed to read inventory data' });
+  }
 });
 
 // Start the server

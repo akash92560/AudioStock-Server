@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 
+const storeController = require('./controllers/storeController');
+
 // Initialize express app
 const app = express();
 const PORT = process.env.PORT || 5123;
@@ -88,60 +90,20 @@ const writeData = (filePath, data) => {
 // Stores API
 app.get('/api/stores', (req, res) => {
   console.log('GET /api/stores request received');
-  try {
-    const stores = readData(STORES_FILE);
-    console.log('Sending stores data:', stores);
-    res.json(stores);
-  } catch (error) {
-    console.error('Error reading stores data:', error);
-    res.status(500).json({ message: 'Failed to read stores data' });
-  }
+  storeController.getAllStores(req, res);
 });
 
 app.post('/api/stores', (req, res) => {
   console.log('POST /api/stores request received:', req.body);
-  try {
-    const stores = readData(STORES_FILE);
-    const newStore = {
-      id: Date.now(),
-      name: req.body.name,
-      location: req.body.location
-    };
-    
-    stores.push(newStore);
-    writeData(STORES_FILE, stores);
-    res.status(201).json(newStore);
-  } catch (error) {
-    console.error('Error adding store:', error);
-    res.status(500).json({ message: 'Failed to add store' });
-  }
+  return storeController.createStore(req, res);
 });
 
 app.put('/api/stores/:id', (req, res) => {
-  const stores = readData(STORES_FILE);
-  const id = parseInt(req.params.id);
-  const storeIndex = stores.findIndex(store => store.id === id);
-  
-  if (storeIndex === -1) {
-    return res.status(404).json({ message: 'Store not found' });
-  }
-  
-  stores[storeIndex] = { ...stores[storeIndex], ...req.body };
-  writeData(STORES_FILE, stores);
-  res.json(stores[storeIndex]);
+  return storeController.updateStore(req, res);
 });
 
 app.delete('/api/stores/:id', (req, res) => {
-  const stores = readData(STORES_FILE);
-  const id = parseInt(req.params.id);
-  const filteredStores = stores.filter(store => store.id !== id);
-  
-  if (filteredStores.length === stores.length) {
-    return res.status(404).json({ message: 'Store not found' });
-  }
-  
-  writeData(STORES_FILE, filteredStores);
-  res.json({ message: 'Store deleted successfully' });
+  return storeController.deleteStore(req, res);
 });
 
 // Item Types API

@@ -49,6 +49,20 @@ exports.getItemsByStoreId = async (req, res) => {
 // Create a new store
 exports.createStore = async (req, res) => {
   try {
+
+    const { name, location, description } = req.body;
+
+
+    // Check if a store with the same name and location already exists
+    const existingStore = await Store.findOne({
+      where: { name, location }
+    });
+
+    if (existingStore) {
+      return res.status(409).json({ message: `A store with the name "${name}" at location "${location}" already exists.` });
+    }
+    console.log('Creating new store:', req.body);
+
     const newStore = await Store.create({
       name: req.body.name,
       location: req.body.location,

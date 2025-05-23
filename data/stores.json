@@ -1,10 +1,5 @@
 [
   {
-    "id": 1747131524540,
-    "name": "Dispencery",
-    "location": "Burari"
-  },
-  {
     "id": 1747131533831,
     "name": "Store room",
     "location": "KB"
@@ -22,6 +17,11 @@
   {
     "id": 1747131578236,
     "name": "Stall Room",
+    "location": "Burari"
+  },
+  {
+    "id": 1748018047201,
+    "name": "Dispencery",
     "location": "Burari"
   }
 ]
